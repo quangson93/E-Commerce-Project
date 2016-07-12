@@ -1,0 +1,222 @@
+﻿@using QLBH_MVC.Models
+
+@model ProductDetailsModel
+
+@section title {
+    CHI TIẾT SẢN PHẨM
+}
+
+@section css{
+    <link href="~/assets/css/details.css" rel="stylesheet" type="text/css" />
+
+    <!-- Include the Etalage files -->
+    <link rel="stylesheet" href="~/assets/css/etalage.css" />
+    <script src="~/assets/js/jquery.etalage.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+
+            $('#etalage').etalage({
+                thumb_image_width: 400,
+                thumb_image_height: 400,
+                source_image_width: 1000,
+                source_image_height: 1000,
+                show_hint: true,
+                click_callback: function (image_anchor, instance_id) {
+                    alert('Callback example:\nYou clicked on an image with the anchor: "' + image_anchor + '"\n(in Etalage instance: "' + instance_id + '")');
+                }
+            });
+            // This is for the dropdown list example:
+            $('.dropdownlist').change(function () {
+                etalage_show($(this).find('option:selected').attr('class'));
+            });
+        });
+    </script>
+
+}
+
+@section js{
+
+}
+
+@if (Model == null)
+{
+    <text>Không có dữ liệu</text>
+}
+else
+{
+    <div class="cont-desc span_1_of_2">
+        <div class="product-details">
+            <div class="grid images_3_of_2">
+                <ul id="etalage">
+
+                    <li>
+                        <img src="~/images/@Model.ProID/1.jpg" class="etalage_thumb_image" />
+                        <img src="~/images/@Model.ProID/1.jpg" class="etalage_source_image" />
+
+                    </li>
+
+                    <li>
+                        <img src="~/images/@Model.ProID/3.jpg" class="etalage_thumb_image" />
+                        <img src="~/images/@Model.ProID/3.jpg" class="etalage_source_image" />
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="desc span_3_of_2">
+                <h2>
+                    <!-- Ten san pham -->
+                    @Model.ProName
+                </h2>
+                <div class="price">
+                    <p>
+                        Price: <span>
+                            <!-- Gia -->
+                            @String.Format("{0:N0}", Model.Price)
+                        </span>
+                    </p>
+                </div>
+                <div class="share-desc">
+                    <p>
+                        <span class="MoTa">Số lượt xem: </span>
+                        <!-- end product_slider -->
+                        @Model.View
+                    </p>
+                    <p>
+                        <span class="MoTa">Tồn kho:  </span>
+                        @Model.Quantity
+                    </p>
+                </div>
+                <div class="share-desc">
+                    <p>
+                        <span class="MoTa">Phân loại: </span>
+                        @Model.ClassifyName
+                    </p>
+                    <p>
+                        <span class="MoTa">NSX: </span>
+                        <!-- NSX -->
+                        @Model.CatName
+                    </p>
+                </div>
+                <div class="share-desc">
+                    <div class="share">
+                        <p>Share :</p>
+                        <ul>
+                            <li>
+                                <a href="#">
+                                    <img src="~/images/facebook.png" alt="" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img src="~/images/twitter.png" alt="" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="clear"></div>
+                </div>
+                <!-- Nếu số lượng tồn lớn 0 và đã login thì cho đặt hàng// khu vực code -->
+                <!-- Kết thúc khu vực code -->
+                <div class="wish-list">
+                    <ul>
+                        <li class="wish"><a href="#">Báo lỗi sản phẩm</a></li>
+                        <li class="compare"><a href="#">So sánh với sản phẩm khác</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+            <div class="description">Thông tin chi tiết</div>
+            <span class="prod-desc">
+                <!-- thông tin chi tiết -->
+                @Html.Raw(Model.FullDes)
+            </span>
+        </div>
+        <!--Cùng nhà sản xuất với sản phẩm-->
+        <div class="content_bottom">
+            <div class="heading">
+                <h3>NHỮNG SẢN PHẨM CÙNG NHÀ SẢN XUẤT</h3>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="section group">
+            <div class="section group">
+                @foreach (var item in Model.ProductSameManufacs)
+                {
+                <div class="grid_1_of_4 images_1_of_4 truncate">
+                    <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProID})">
+                        <img src="~/images/@item.ProID/1_thumbs.jpg" alt="" />
+                    </a>
+                    <h2>
+                        @item.ProName
+                    </h2>
+                    <div class="price-details">
+                        <div class="price-number truncate">
+                            <p><span class="rupees">@String.Format("{0:N0}", item.Price)</span></p>
+                        </div>
+                        <div class="add-cart">
+                            <h4>
+                                @if (item.Quantity < 1)
+                                {
+                                    <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProID})">Hết hàng</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProID})">Chi tiết</a>
+                                }
+                            </h4>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+
+        <!--Cùng Loại với sản phẩm-->
+        <div class="content_bottom">
+            <div class="heading">
+                <h3>NHỮNG SẢN PHẨM CÙNG LOẠI </h3>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="section group">
+            <div class="section group">
+                @foreach (var item in Model.ProductSameClassifies)
+                {
+                <div class="grid_1_of_4 images_1_of_4 truncate">
+                    <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProID})">
+                        <img src="~/images/@item.ProID/1_thumbs.jpg" alt="" />
+                    </a>
+                    <h2>
+                        @item.ProName
+                    </h2>
+                    <div class="price-details">
+                        <div class="price-number truncate">
+                            <p><span class="rupees">@String.Format("{0:N0}", item.Price)</span></p>
+                        </div>
+                        <div class="add-cart">
+                            <h4>
+                                @if (item.Quantity < 1)
+                                {
+                                    <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProID})">Hết hàng</a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("ProductDetail", "Product", new { id = item.ProID})">Chi tiết</a>
+                                }
+                            </h4>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+}

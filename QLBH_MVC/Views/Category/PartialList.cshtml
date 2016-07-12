@@ -1,0 +1,14 @@
+﻿@using QLBH_MVC.Models
+
+@model List<Category>
+
+@foreach (Category c in Model)
+{
+    @*<text>@c.CatName</text>*@
+    
+    <li>
+        <a href="@Url.Action("ByCat", "Product", new { id= @c.CatID})">
+            @c.CatName
+        </a>
+    </li>
+}
